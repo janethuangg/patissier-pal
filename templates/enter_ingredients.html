@@ -1,0 +1,77 @@
+{%extends 'layout.html' %}
+
+{% block body %}    
+    <!-- <form class="form-inline">
+        <input class="form-control mr-sm-2" type="search" placeholder="Ingredient name" aria-label="Enter">
+        <button class="btn btn-outline-success my-4 my-sm-0" type="submit">Enter</button>
+    </form> -->
+    <style>
+        input[type='checkbox'] {
+            -webkit-appearance:none;
+            width:30px;
+            height:30px;
+            margin-right:10px;
+            background:white;
+            border-radius:30px;
+            border:2px solid #555;
+            vertical-align: middle;
+            outline: none;   
+        }
+        input[type='checkbox']:checked {
+            background:#d1a923;
+            border:2px solid #d1a923;
+        }
+
+    ul{
+        -moz-column-count: 3;
+        -moz-column-gap: 20px;
+        -webkit-column-count: 3;
+        -webkit-column-gap: 20px;
+        column-count: 3;
+        column-gap: 20px;
+        list-style-type:none;
+    }
+
+    li{
+        margin-bottom: 10px;
+    }
+
+    .card{
+        background-color: white;
+        border-radius:30px;
+        border:2px solid white;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 40px 20px 40px 20px;
+    }
+
+    body{
+        background-color: wheat;
+    }
+
+    h2{
+        color:#d1a923;
+        text-shadow: 2px 2px white;
+    }
+
+    </style>
+
+
+    <div class="container">
+        <h2>Select your ingredients</h2>
+        <div class="card">
+            <form method="POST" action="">
+                <ul>
+                    {% for ingredient in ingredients %}
+                        <li>
+                            <input type="checkbox" value="{{ingredient}}" name="ingredient">
+                            <label for={{ingredient}}>{{ingredient}}</label><br>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <hr>
+                <input type="submit" value="Submit" class="btn btn-primary" style="margin-bottom: 50px;"> 
+            </form>
+        </div>
+    </div>
+{% endblock %}

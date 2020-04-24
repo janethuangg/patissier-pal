@@ -1,0 +1,22 @@
+{%extends 'layout.html' %}
+
+{% block body %}
+    <div class="jumbotron text-center">
+        <h1>Welcome to Desserts!</h1>
+        <p class="lead">This application is built using Flask and MongoDB.</p>
+        <hr>
+        <h3>Start with...</h3>
+        <div class="container">
+            <div class="row">
+              <div class="col-sm">
+                <a href="/enter_ingredients" class="btn btn-outline-primary btn-block btn-lg"> the ingredients</a>
+              </div>
+              <div class="col-sm">
+                <a href="/enter_recipe" class="btn btn-outline-primary btn-block btn-lg"> the recipe</a>
+            </div>
+            </div>
+        </div>
+        <br>
+        <hr>
+        <h3>Need some inspiration? Check out the video index!</h3>
+{% endblock %}

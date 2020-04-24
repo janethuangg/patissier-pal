@@ -1,0 +1,42 @@
+{%extends 'layout.html' %}
+
+{% block body %}
+<div class="container">
+    <style>
+        h2{
+            margin-bottom: 10px;
+        }
+        #hidden_div {
+            display: none;
+        }
+    </style>
+
+    <script type="text/javascript">
+        function showDiv(divId, element)
+        {   
+            document.getElementById(divId).style.setProperty("display","block");
+            var inputVal = document.getElementById("title").value;
+            console.log(inputVal)
+            var div = document.getElementById("hidden_div")
+            console.log(div)
+        }
+    </script>
+    
+    <h2>Search for your video</h2>
+    
+    <form method="POST" action="">
+        <input class="form-control" type="text" id="title" name="video" list="video-titles" placeholder="Video Title" onchange="showDiv('hidden_div', this)">
+        <datalist id="video-titles">
+            {% for video in videos %} 
+                <option>{{video}}</option>
+            {% endfor %}
+        </datalist>
+        <hr>
+        <!-- <div id="hidden_div">
+            <iframe width="333" height="200" src="https://www.youtube.com/embed/" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div> -->
+        <input type="submit" value="Submit" class="btn btn-primary" style="margin-bottom: 50px;"> 
+    </form>
+     
+</div>
+{% endblock %}
