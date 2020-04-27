@@ -52,6 +52,18 @@ def enter_ingredients():
     ingredients = db.ingredients.distinct('name')
     return render_template('enter_ingredients.html', ingredients=ingredients)
 
+@app.route('/top_ingredients')
+def top_ingredients():
+    mongo_response = db.ingredients.find({},{'_id':0,'name':1, 'count':1}).sort([("count", -1), ("name", 1)]).limit(10)
+    num_videos = db.videos.count()
+
+    ordered_ingredients = []
+    for x in mongo_response:
+        x['count'] = round((x['count']/num_videos)*100,1)
+        ordered_ingredients.append(x)
+
+    return render_template('top_ingredients.html', ingredients=ordered_ingredients)  
+
 @app.route('/retrieved_recipes', methods=['GET','POST'])
 def retrieved_recipes():
     if request.method == 'POST':

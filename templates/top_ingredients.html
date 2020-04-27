@@ -1,0 +1,67 @@
+{%extends 'layout.html' %}
+
+{% block body %}    
+<style>
+    ul{
+        -moz-column-count: 3;
+        -moz-column-gap: 20px;
+        -webkit-column-count: 3;
+        -webkit-column-gap: 20px;
+        column-count: 3;
+        column-gap: 20px;
+        list-style-type:none;
+    }
+
+    li{
+        margin-bottom: 10px;
+    }
+
+    .card{
+        background-color: white;
+        border-radius:30px;
+        border:2px solid white;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 40px 20px 40px 20px;
+    }
+
+    body{
+        background-color: wheat;
+    }
+
+    h2{
+        color:#d1a923;
+        text-shadow: 2px 2px white;
+    }
+
+    b{
+        color:#d1a923;
+    }
+    .row{
+        background-color: white;
+        border-radius:30px;
+        border:2px solid white;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 20px 10px 15px 10px;
+    }
+
+    </style>    
+    <div class="container">
+        <h2>Top 10 Most Used Ingredients</h2>
+        <div class="row">
+            <div class="col">
+                <ol class="list-group">
+                    {% for ingredient in ingredients %}
+                        <li class="list-group-item">
+                            <span class="badge badge-light badge-pill" style="margin-right: 10px;">{{loop.index}}</span>
+                            <b>{{ingredient.name}}</b> is used in {{ingredient.count}}% of the recipes
+                        </li>
+                    {% endfor %}
+                    </ol>
+            </div>
+        </div>
+        <br>
+        <br>
+    </div>
+{% endblock %}
