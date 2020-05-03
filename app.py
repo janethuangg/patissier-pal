@@ -25,13 +25,8 @@ def enter_recipe():
         mongo_response1 = db.videos.find({"title":selected_video})
         selected_ingredients = mongo_response1[0]['ingredientNames']
 
-        mongo_response2 = db.videos.find({"ingredientNames": {"$not": {"$elemMatch": {"$nin" : selected_ingredients }}}},{ "id": 1, "ingredientDetails":1,"_id":0,"title":1})
-        retrieved_recipes = []
-        for x in mongo_response2:
-            retrieved_recipes.append(x)
-        
         # flash('Recipes Found','success')
-        return redirect(url_for('retrieved_recipes', recipes=retrieved_recipes))
+        return redirect(url_for('retrieved_recipes', ingredients=selected_ingredients))
 
     videoTitles = db.videos.distinct("title")
     return render_template('enter_recipe.html', videos=videoTitles)
@@ -40,14 +35,9 @@ def enter_recipe():
 def enter_ingredients():
     if request.method == 'POST':
         selected_ingredients = request.form.getlist('ingredient')
-        mongo_response = db.videos.find({"ingredientNames": {"$not": {"$elemMatch": {"$nin" : selected_ingredients }}}},{ "id": 1, "ingredientDetails":1,"_id":0,"title":1})
-        
-        retrieved_recipes = []
-        for x in mongo_response:
-            retrieved_recipes.append(x)
         
         # flash('Recipes Found','success')
-        return redirect(url_for('retrieved_recipes', recipes=retrieved_recipes))
+        return redirect(url_for('retrieved_recipes', ingredients=selected_ingredients))
 
     ingredients = db.ingredients.distinct('name')
     return render_template('enter_ingredients.html', ingredients=ingredients)
@@ -70,10 +60,15 @@ def retrieved_recipes():
         final_recipes = request.form.getlist('final_recipe')
         return redirect(url_for('final_recipes', recipes=final_recipes))
 
-    retrieved_recipes = request.args.getlist('recipes')
+    selected_ingredients = request.args.getlist('ingredients')
+    mongo_response = db.videos.find({"ingredientNames": {"$not": {"$elemMatch": {"$nin" : selected_ingredients }}}},{ "id": 1, "ingredientDetails":1,"_id":0,"title":1})
+    
+    retrieved_recipes = []
+    for x in mongo_response:
+        retrieved_recipes.append(x)
 
-    for i in range(len(retrieved_recipes)):
-        retrieved_recipes[i] = json.loads(retrieved_recipes[i].replace("'", '"'))
+    # for i in range(len(retrieved_recipes)):
+    #     retrieved_recipes[i] = json.loads(retrieved_recipes[i].replace("'", '"'))
 
     return render_template('retrieved_recipes.html', recipes=retrieved_recipes)
 
