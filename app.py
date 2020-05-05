@@ -21,15 +21,8 @@ from passlib.hash import sha256_crypt
 # from oauthlib.oauth2 import WebApplicationClient
 # import requests
 
-from dotenv import load_dotenv
-load_dotenv()
-
 # MongoDB Config
 client = MongoClient(os.environ.get('MONGO_URI'))
-if os.environ.get('MONGO_URI'):
-    print("none")
-else:
-    print(os.environ.get('MONGO_URI'))
 db = client.desserts
 
 # # Google OAuth Config
@@ -137,17 +130,22 @@ def enter_ingredients():
     if request.method == 'POST':
         selected_ingredients = request.form.getlist('ingredient')
         
-        if session['logged_in']:
-            db.users.update_one({ "username" : "janethuangg" },{ "$set": {"pantry":selected_ingredients }})
-        
+        try:
+            if session['logged_in']:
+                db.users.update_one({ "username" : "janethuangg" },{ "$set": {"pantry":selected_ingredients }})
+        except: 
+            pass
+
         # flash('Recipes Found','success')
         return redirect(url_for('retrieved_recipes', ingredients=selected_ingredients))
 
     ingredients = db.ingredients.distinct('name')
-
-    if session['logged_in']:
-        pantry = db.users.find_one({"username":"janethuangg"},{"_id":0,"pantry":1})['pantry']
-        print(pantry)
+    pantry = []
+    try:
+        if session['logged_in']:
+            pantry = db.users.find_one({"username":"janethuangg"},{"_id":0,"pantry":1})['pantry']
+    except:
+        pass
 
     return render_template('enter_ingredients.html', ingredients=ingredients, pantry=pantry)
 
