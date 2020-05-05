@@ -34,6 +34,7 @@ db = client.desserts
 # )
  
 app = Flask(__name__)
+app.secret_key = os.environ.get('SECRET_KEY')
 # run_with_ngrok(app)  # Start ngrok when app is run
 
 #decorator function that restricts access to certain pages
@@ -81,6 +82,7 @@ def login():
         password_candidate = request.form['password']
 
         data = list(db.users.find({"username":username}))
+        print(data)
         if data:
             data = data[0]
             password = data['password']
@@ -93,7 +95,7 @@ def login():
                 return redirect(url_for('index'))
             else:
                 error = "Invalid login"
-                return render_template('dashboard.html', error=error)
+                return render_template('login.html', error=error)
             cur.close()
         else:
             error = "Username not found"
@@ -207,5 +209,4 @@ def final_recipes():
     return render_template('final_recipes.html', recipes=final_recipes, compiled=compiled)
 
 if __name__ == '__main__':
-    app.secret_key = os.environ.get('SECRET_KEY')
     app.run(debug=True)
