@@ -11,7 +11,6 @@ import os
 import copy
 from passlib.hash import sha256_crypt
 
-
 # from flask_login import (
 #     LoginManager,
 #     current_user,
@@ -26,7 +25,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # MongoDB Config
-client = MongoClient(os.getenv("MONGO_URI"))
+client = MongoClient(os.environ['MONGO_URI'])
 db = client.desserts
 
 # # Google OAuth Config
@@ -206,5 +205,5 @@ def final_recipes():
     return render_template('final_recipes.html', recipes=final_recipes, compiled=compiled)
 
 if __name__ == '__main__':
-    app.secret_key = os.getenv("SECRET_KEY") 
+    app.secret_key = os.environ['SECRET_KEY']
     app.run(debug=True)
