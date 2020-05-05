@@ -64,7 +64,11 @@
                 <ul>
                     {% for ingredient in ingredients %}
                         <li>
-                            <input type="checkbox" value="{{ingredient}}" name="ingredient">
+                            {% if ingredient in pantry %}
+                                <input type="checkbox" value="{{ingredient}}" name="ingredient" checked=checked>
+                            {% else %}
+                                <input type="checkbox" value="{{ingredient}}" name="ingredient">
+                            {% endif %}
                             <label for={{ingredient}}>{{ingredient}}</label><br>
                         </li>
                     {% endfor %}

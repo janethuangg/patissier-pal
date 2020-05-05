@@ -1,0 +1,9 @@
+#bootstrap-overrides body{
+    background-color: wheat;
+}
+
+#bootstrap-overrides h2{
+    color:#d1a923;
+    text-shadow: 2px 2px white;
+    margin-bottom: 10px;
+}

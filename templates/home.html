@@ -1,8 +1,14 @@
 {%extends 'layout.html' %}
 
 {% block body %}
-    <div class="jumbotron text-center">
-        <h1>Welcome to Desserts!</h1>
+    <style>
+       body{
+            background-color: wheat;
+        }
+    </style>
+
+    <div class="jumbotron text-center bg-white">
+        <h1>Welcome to Patissier Pal {{session.name}}!</h1>
         <p class="lead">This application is built using Flask and MongoDB.</p>
         <hr>
         <h3>Start with...</h3>

@@ -58,7 +58,7 @@
                     
                 </style>
                 <div class="col-8">
-                    <h4>{{recipe.title}}</h4><input type="checkbox" value="{{recipe}}" name="final_recipe">
+                    <h4>{{recipe.title}}</h4><input type="checkbox" value="{{recipe.id}}" name="final_recipe">
                 <ul>
                     {% for ingredient in recipe.ingredientDetails %}
                         <li>{{ingredient}} -                         
