@@ -1,64 +1,76 @@
 {%extends 'layout.html' %}
 
 {% block body %}
+<style>
+    ul {
+    display: -ms-flexbox;           /* IE 10 */
+    display: -webkit-flex;          /* Safari 6.1+. iOS 7.1+ */
+    display: flex;
+    -webkit-flex-flow: wrap column; /* Safari 6.1+ */
+    flex-flow: wrap column;
+    max-height: 150px;      
+    }
+    .row{
+        background-color: white;
+        border-radius:30px;
+        border:2px solid white;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding: 20px 10px 15px 10px;
+    }
+
+    body{
+        background-color: wheat;
+    }
+
+    h4{
+        color: #d1a923;
+        margin-bottom: 5px;
+        display: inline-block;
+    }
+
+    h2{
+        color:#d1a923;
+        text-shadow: 2px 2px white;
+    }
+
+    input[type='checkbox'] {
+        margin-left: 10px;
+        vertical-align: text-top;
+        outline: none;   
+    }
+    input[type='checkbox']:checked {
+        /* background:#d1a923;
+        border:2px solid #d1a923; */
+    }
+    a{
+        color:#d1a923;
+        hover
+    }
+
+    a:hover {
+        color: #d1a923;
+    }
+    
+</style>
+
 <div class="container">
     {% if not recipes %}
         <h2>No recipes found matching the given conditions :(</h2>
     {% else %}
         <h2>Here are videos that you can follow given your ingredients!</h2>
+
         <form method="POST" action="">
         {% for recipe in recipes %}
             <div class="row">
                 <div class="col-4">
-                    <iframe width="333" height="200" src="https://www.youtube.com/embed/{{recipe.id}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <img src="https://img.youtube.com/vi/{{recipe.id}}/sddefault.jpg" width=333 height=233}></img>
+                    <!-- <iframe width="333" height="200" src="https://www.youtube.com/embed/{{recipe.id}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
                 </div>
                 
-                <style>
-                    ul {
-                    display: -ms-flexbox;           /* IE 10 */
-                    display: -webkit-flex;          /* Safari 6.1+. iOS 7.1+ */
-                    display: flex;
-                    -webkit-flex-flow: wrap column; /* Safari 6.1+ */
-                    flex-flow: wrap column;
-                    max-height: 150px;      
-                    }
-                    .row{
-                        background-color: white;
-                        border-radius:30px;
-                        border:2px solid white;
-                        margin-top: 20px;
-                        margin-bottom: 20px;
-                        padding: 20px 10px 15px 10px;
-                    }
-
-                    body{
-                        background-color: wheat;
-                    }
-
-                    h4{
-                        color: #d1a923;
-                        margin-bottom: 5px;
-                        display: inline-block;
-                    }
-
-                    h2{
-                        color:#d1a923;
-                        text-shadow: 2px 2px white;
-                    }
-
-                    input[type='checkbox'] {
-                        margin-left: 10px;
-                        vertical-align: text-top;
-                        outline: none;   
-                    }
-                    input[type='checkbox']:checked {
-                        /* background:#d1a923;
-                        border:2px solid #d1a923; */
-                    }
-                    
-                </style>
+                
                 <div class="col-8">
-                    <h4>{{recipe.title}}</h4><input type="checkbox" value="{{recipe.id}}" name="final_recipe">
+                    <h4><a href="https://www.youtube.com/watch?v={{recipe.id}}" target="_blank">{{recipe.title}}</a></h4><input type="checkbox" value="{{recipe.id}}" name="final_recipe">
                 <ul>
                     {% for ingredient in recipe.ingredientDetails %}
                         <li>{{ingredient}} -                         

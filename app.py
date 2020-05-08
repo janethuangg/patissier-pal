@@ -1,43 +1,21 @@
 from flask import Flask, request, render_template, flash, redirect, url_for, session, logging
-# from data import Articles
-#https://stackoverflow.com/questions/52261686/issues-with-flask-mysqldb-using-python3-7?rq=1
-#export DYLD_LIBRARY_PATH=/usr/local/mysql/lib/:$DYLD_LIBRARY_PATH
-# from flask_ngrok import run_with_ngrok
 from pymongo import MongoClient
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
-
+from flask_paginate import Pagination, get_page_parameter, get_page_args
 import json
 import os
 import copy
 from passlib.hash import sha256_crypt
 
-# from flask_login import (
-#     LoginManager,
-#     current_user,
-#     login_required,
-#     login_user,
-#     logout_user,
-# )
-# from oauthlib.oauth2 import WebApplicationClient
-# import requests
-
 # MongoDB Config
 client = MongoClient(os.environ.get('MONGO_URI'))
 db = client.desserts
-
-# # Google OAuth Config
-# os.getenv("MYSQL_PASS")
-# GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
-# GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
-# GOOGLE_DISCOVERY_URL = (
-#     "https://accounts.google.com/.well-known/openid-configuration"
-# )
  
+ # App Setup
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
-# run_with_ngrok(app)  # Start ngrok when app is run
 
-#decorator function that restricts access to certain pages
+# Decorator function to restrict access to certain pages
 def login_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
@@ -48,6 +26,7 @@ def login_required(f):
             return redirect(url_for('login'))
     return wrap
     
+# Registration form class
 class RegisterForm(Form):
     name = StringField('Name', [validators.Length(min=1, max=50)])
     username = StringField('Username', [validators.Length(min=4, max=25)])
@@ -163,6 +142,25 @@ def top_ingredients():
 
     return render_template('top_ingredients.html', ingredients=ordered_ingredients)  
 
+def get_recipes(offset=0, per_page=10, recipes=[]):
+    return recipes[offset: offset + per_page]
+
+@app.route('/video_library')
+def video_library():
+    page, per_page, offset = get_page_args(page_parameter='page',
+                                           per_page_parameter='per_page')
+    recipes = list(db.videos.find({},{ "id": 1, "ingredientDetails":1,"_id":0,"title":1}).sort([("title",1)]))
+    total = len(recipes)
+    pagination_recipes = get_recipes(offset=offset, per_page=per_page, recipes=recipes)
+    pagination = Pagination(page=page, per_page=per_page, total=total,
+                            css_framework='bootstrap4')
+
+    return render_template('library.html', 
+                            recipes=pagination_recipes,
+                            page=page,
+                            per_page=per_page,
+                            pagination=pagination)
+
 @app.route('/retrieved_recipes', methods=['GET','POST'])
 def retrieved_recipes():
     if request.method == 'POST':
@@ -170,28 +168,14 @@ def retrieved_recipes():
         return redirect(url_for('final_recipes', recipe_ids=final_recipes))
 
     selected_ingredients = request.args.getlist('ingredients')
-    retrieved_recipes = list(db.videos.find({"ingredientNames": {"$not": {"$elemMatch": {"$nin" : selected_ingredients }}}},{ "id": 1, "ingredientDetails":1,"_id":0,"title":1}))
-    
-    # retrieved_recipes = []
-    # for x in mongo_response:
-    #     retrieved_recipes.append(x)
+    recipes = list(db.videos.find({"ingredientNames": {"$not": {"$elemMatch": {"$nin" : selected_ingredients }}}},{ "id": 1, "ingredientDetails":1,"_id":0,"title":1}).sort([("title", 1)]))
 
-    # for i in range(len(retrieved_recipes)):
-    #     retrieved_recipes[i] = json.loads(retrieved_recipes[i].replace("'", '"'))
-
-    return render_template('retrieved_recipes.html', recipes=retrieved_recipes)
+    return render_template('retrieved_recipes.html',recipes=recipes)
 
 @app.route('/final_recipes')
 def final_recipes():
     ids = request.args.getlist('recipe_ids')
     final_recipes = list(db.videos.find({"id":{"$in":ids}}))
-    
-    # final_recipes = []
-    # for x in mongo_response:
-    #     final_recipes.append(x)
-
-    # for i in range(len(final_recipes)):
-    #     final_recipes[i] = json.loads(final_recipes[i].replace("'", '"'))
         
     compiled = {}
     for recipe in final_recipes:
