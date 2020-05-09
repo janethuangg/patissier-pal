@@ -1,9 +1,55 @@
-#bootstrap-overrides body{
+body{
     background-color: wheat;
 }
 
-#bootstrap-overrides h2{
-    color:#d1a923;
+h2{
+    color:#BA6C65;
     text-shadow: 2px 2px white;
-    margin-bottom: 10px;
 }
+
+.row{
+    background-color: white;
+    border-radius:30px;
+    border:2px solid white;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 20px 10px 15px 10px;
+}
+
+h4{
+    color: #BA6C65;
+    margin-bottom: 5px;
+    display: inline-block;
+}
+
+.card{
+    background-color: white;
+    border-radius:30px;
+    border:2px solid white;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 40px 20px 40px 20px;
+}
+
+b{
+    color:#BA6C65;
+}
+
+a{
+    color:#BA6C65;
+}
+
+a:hover {
+    color: #BA6C65;
+}
+
+.btn-outline-primary{
+    color:#BA6C65;
+    border: 2px solid #BA6C65; /* Green */
+}
+
+.btn-outline-primary:hover {
+    background-color: #BA6C65; /* Green */
+    border: 2px solid #BA6C65; /* Green */
+    color: white;
+  }

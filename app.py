@@ -5,6 +5,7 @@ from flask_paginate import Pagination, get_page_parameter, get_page_args
 import json
 import os
 import copy
+import math
 from passlib.hash import sha256_crypt
 
 # MongoDB Config
@@ -96,12 +97,14 @@ def index():
 def enter_recipe():
     if request.method == 'POST':
         selected_video = request.form.get('video')
-        
-        mongo_response1 = db.videos.find({"title":selected_video})
-        selected_ingredients = mongo_response1[0]['ingredientNames']
 
-        # flash('Recipes Found','success')
-        return redirect(url_for('retrieved_recipes', ingredients=selected_ingredients))
+        try:        
+            mongo_response1 = db.videos.find({"title":selected_video})
+            selected_ingredients = mongo_response1[0]['ingredientNames']
+            return redirect(url_for('retrieved_recipes', ingredients=selected_ingredients))
+        except:
+            flash('Invalid video','danger')
+            return redirect(url_for('enter_recipe'))
 
     videoTitles = db.videos.distinct("title")
     return render_template('enter_recipe.html', videos=videoTitles)
@@ -145,12 +148,19 @@ def top_ingredients():
 def get_recipes(offset=0, per_page=10, recipes=[]):
     return recipes[offset: offset + per_page]
 
+def formatName(recipe):
+    if len(recipe['title'])>55:
+        recipe['title'] = recipe['title'][:55]+"..." 
+    return recipe
+
 @app.route('/video_library')
 def video_library():
     page, per_page, offset = get_page_args(page_parameter='page',
                                            per_page_parameter='per_page')
     recipes = list(db.videos.find({},{ "id": 1, "ingredientDetails":1,"_id":0,"title":1}).sort([("title",1)]))
+    recipes = list(map(formatName,recipes))
     total = len(recipes)
+
     pagination_recipes = get_recipes(offset=offset, per_page=per_page, recipes=recipes)
     pagination = Pagination(page=page, per_page=per_page, total=total,
                             css_framework='bootstrap4')
@@ -169,13 +179,15 @@ def retrieved_recipes():
 
     selected_ingredients = request.args.getlist('ingredients')
     recipes = list(db.videos.find({"ingredientNames": {"$not": {"$elemMatch": {"$nin" : selected_ingredients }}}},{ "id": 1, "ingredientDetails":1,"_id":0,"title":1}).sort([("title", 1)]))
-
+    recipes = list(map(formatName,recipes))
+    print(recipes[:5])
     return render_template('retrieved_recipes.html',recipes=recipes)
 
 @app.route('/final_recipes')
 def final_recipes():
     ids = request.args.getlist('recipe_ids')
     final_recipes = list(db.videos.find({"id":{"$in":ids}}))
+    final_recipes = list(map(formatName,final_recipes))
         
     compiled = {}
     for recipe in final_recipes:

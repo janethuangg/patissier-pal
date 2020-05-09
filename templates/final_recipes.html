@@ -10,45 +10,12 @@
     flex-flow: wrap column;
     max-height: 150px;      
     }
-    .row{
-        background-color: white;
-        border-radius:30px;
-        border:2px solid white;
-        margin-top: 20px;
-        margin-bottom: 20px;
-        padding: 20px 10px 15px 10px;
-    }
-
-    body{
-        background-color: wheat;
-    }
-
-    h4{
-        color: #d1a923;
-        margin-bottom: 5px;
-        display: inline-block;
-    }
-
-    h2{
-        color:#d1a923;
-        text-shadow: 2px 2px white;
-    }
-
-    h3{
-        color:#d1a923;
-        text-align: center;
-        margin-bottom: 30px;
-        /* display:block; */
-    }
-
 </style>
 
 <div class="container">
     <h2>Compiled Ingredient List</h2>
     <div class="row">
         <div class="col">
-            <!-- <h3>Compiled Ingredient List</h3> -->
-
             <ul class="list-group">
                 {% for ingredient in compiled %}
                     <li class="list-group-item">{{ingredient}} -                         

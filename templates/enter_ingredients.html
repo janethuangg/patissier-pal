@@ -1,10 +1,6 @@
 {%extends 'layout.html' %}
 
 {% block body %}    
-    <!-- <form class="form-inline">
-        <input class="form-control mr-sm-2" type="search" placeholder="Ingredient name" aria-label="Enter">
-        <button class="btn btn-outline-success my-4 my-sm-0" type="submit">Enter</button>
-    </form> -->
     <style>
         input[type='checkbox'] {
             -webkit-appearance:none;
@@ -18,50 +14,36 @@
             outline: none;   
         }
         input[type='checkbox']:checked {
-            background:#d1a923;
-            border:2px solid #d1a923;
+            background:#BA6C65;
+            border:2px solid #BA6C65;
         }
 
-    ul{
-        -moz-column-count: 3;
-        -moz-column-gap: 20px;
-        -webkit-column-count: 3;
-        -webkit-column-gap: 20px;
-        column-count: 3;
-        column-gap: 20px;
-        list-style-type:none;
-    }
+        ul{
+            -moz-column-count: 3;
+            -moz-column-gap: 20px;
+            -webkit-column-count: 3;
+            -webkit-column-gap: 20px;
+            column-count: 3;
+            column-gap: 20px;
+            list-style-type:none;
+        }
 
-    li{
-        margin-bottom: 10px;
-    }
-
-    .card{
-        background-color: white;
-        border-radius:30px;
-        border:2px solid white;
-        margin-top: 20px;
-        margin-bottom: 20px;
-        padding: 40px 20px 40px 20px;
-    }
-
-    body{
-        background-color: wheat;
-    }
-
-    h2{
-        color:#d1a923;
-        text-shadow: 2px 2px white;
-    }
+        li{
+            margin-bottom: 10px;
+        }
 
     </style>
 
 
     <div class="container">
         <h2>Select your ingredients</h2>
+        {% if not session.logged_in %}
+            Log in <a href="{{ url_for('login') }}">here</a> to save your ingredient selection
+        {% endif %}
+
         <div class="card">
             <form method="POST" action="">
-                <ul>
+                <ul class="ingred">
                     {% for ingredient in ingredients %}
                         <li>
                             {% if ingredient in pantry %}
