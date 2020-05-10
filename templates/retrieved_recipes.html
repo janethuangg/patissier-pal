@@ -3,9 +3,15 @@
 {% block body %}
     {% if not recipes %}
         <h2>No recipes found matching the given conditions :(</h2>
+        <>Please <u><a href={{ url_for('enter_ingredients') }}>select more ingredients</a></u> or skim through the <u><a href={{ url_for('video_library') }}>video library</a></u> as a starting point</p>
+        <div class="outer" style="margin-top:10vh">
+            <div class="inner">
+                <img class="mw-100" src="static/graphics/giphy.gif" alt="Max-width 100%">
+            </div>
+        </div>
     {% else %}
         <h2>Here are videos that you can follow given your ingredients!</h2>
-       <b>Hole-punch the recipe cards you'd like to save & get a compiled ingredient list for</b>
+        <p>Hole-punch the recipe cards you'd like to save & get a compiled ingredient list for</p>
 
         <form method="POST" action="">
         {% for recipe in recipes %}
@@ -15,7 +21,7 @@
                 </div>
             
                 <div class="col-8">
-                    <h4><a href="https://www.youtube.com/watch?v={{recipe.id}}" target="_blank">{{recipe.title}}</a></h4><input class="square" type="checkbox" value="{{recipe.id}}" name="final_recipe">
+                    <h4><a class="link" href="https://www.youtube.com/watch?v={{recipe.id}}" target="_blank">{{recipe.title}}</a></h4><input class="square" type="checkbox" value="{{recipe.id}}" name="final_recipe">
                     <ul class="recipe">
                         {% for ingredient in recipe.ingredientDetails %}
                             <li>{{ingredient}} -                         
@@ -31,7 +37,7 @@
                 </div>
             </div>
         {% endfor %}
-        <input type="submit" value="Submit" class="btn btn-outline-primary" style="margin-bottom: 50px;"> 
+        <input type="submit" value="Get Summary" class="btn btn-block btn-outline-primary" style="margin-bottom: 50px;"> 
         </form>
     {% endif %}
 {% endblock %}

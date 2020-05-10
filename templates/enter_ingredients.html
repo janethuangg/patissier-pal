@@ -2,9 +2,12 @@
 
 {% block body %}     
     <h2>Select your ingredients</h2>
+    <p>See what desserts you can make with your ingredients!
     {% if not session.logged_in %}
-        <b>Log in <u><a href="{{ url_for('login') }}">here</a></u> to save your ingredient selection</b>
+        Log in <u><a href="{{ url_for('login') }}">here</a></u> to save your ingredient selection.
     {% endif %}
+    </p>
+    
 
     <div class="card">
         <form method="POST" action="">
@@ -20,8 +23,7 @@
                     </li>
                 {% endfor %}
             </ul>
-            <hr>
-            <input type="submit" value="Submit" class="btn btn-outline-primary" style="margin-top: 10px;"> 
+            <input type="submit" value="Get Videos" class="btn btn-block btn-outline-primary" style="margin-top: 10px;"> 
         </form>
     </div>
     <br>

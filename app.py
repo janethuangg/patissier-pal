@@ -43,7 +43,7 @@ def register():
         user = {'name':name,'email':email,'username':username,'password':password,'pantry':[]}
         db.users.insert(user)
 
-        flash("You are now registered and can log in", "success")
+        flash("You are now registered and can log in", "light")
         return redirect(url_for('login'))
 
     return render_template('register.html', form=form) 
@@ -69,7 +69,6 @@ def login():
                 session['username'] = username
                 session['name'] = data['name']
 
-                flash('You are now logged in', 'success')
                 return redirect(url_for('index'))
             else:
                 error = "Invalid login"
@@ -84,7 +83,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.clear()
-    flash("You are now logged out", 'success')
+    flash("You are now logged out", 'light')
     return redirect(url_for('login'))
 
 @app.route('/')

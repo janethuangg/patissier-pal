@@ -1,10 +1,22 @@
 body{
-    background-color: wheat;
+    background-color: #FCEEE4;
+}
+
+h1{
+    margin-top: 7vh;
+    text-align: center;
+    font-family: 'Sacramento', cursive;
+    color:#BA6C65;
+    font-size:60px;
 }
 
 h2{
     color:#BA6C65;
-    text-shadow: 2px 2px white;
+}
+
+h3{
+    color:#BA6C65;
+    margin-top: 5vh;
 }
 
 h4{
@@ -17,13 +29,16 @@ b{
     color:#BA6C65;
 }
 
-a{
-    color:#BA6C65;
-    
+a{  
+    color:black;
 }
 
 a:hover {
-    color: white;
+    color: #BA6C65;
+}
+
+a.link{
+    color:#BA6C65;
 }
 
 .row{
@@ -85,8 +100,8 @@ input[type='checkbox'].square {
     float:right;
 }
 input[type='checkbox']:checked.square {
-    background:wheat;
-    border:2px solid wheat;
+    background:#FCEEE4;
+    border:2px solid #FCEEE4;
 }
 
 ul.recipe {
@@ -111,7 +126,23 @@ ul.ingred{
 li.ingred{
     margin-bottom: 10px;
 }
+
 li.page-item.active{
     background-color: white;
     color: black;
+}
+
+.inner{
+    display: inline-block;
+}
+.outer {
+    width: 100%;
+    text-align: center;
+}
+
+.row.home{
+    background-color: #FCEEE4;
+    border: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
