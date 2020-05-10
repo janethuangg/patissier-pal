@@ -19,10 +19,11 @@ b{
 
 a{
     color:#BA6C65;
+    
 }
 
 a:hover {
-    color: #BA6C65;
+    color: white;
 }
 
 .row{
@@ -109,4 +110,8 @@ ul.ingred{
 
 li.ingred{
     margin-bottom: 10px;
+}
+li.page-item.active{
+    background-color: white;
+    color: black;
 }

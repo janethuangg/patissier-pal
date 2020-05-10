@@ -3,7 +3,7 @@
 {% block body %}     
     <h2>Select your ingredients</h2>
     {% if not session.logged_in %}
-        Log in <a href="{{ url_for('login') }}">here</a> to save your ingredient selection
+        <b>Log in <u><a href="{{ url_for('login') }}">here</a></u> to save your ingredient selection</b>
     {% endif %}
 
     <div class="card">
