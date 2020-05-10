@@ -1,63 +1,27 @@
 {%extends 'layout.html' %}
 
-{% block body %}    
-    <style>
-        input[type='checkbox'] {
-            -webkit-appearance:none;
-            width:30px;
-            height:30px;
-            margin-right:10px;
-            background:white;
-            border-radius:30px;
-            border:2px solid #555;
-            vertical-align: middle;
-            outline: none;   
-        }
-        input[type='checkbox']:checked {
-            background:#BA6C65;
-            border:2px solid #BA6C65;
-        }
+{% block body %}     
+    <h2>Select your ingredients</h2>
+    {% if not session.logged_in %}
+        Log in <a href="{{ url_for('login') }}">here</a> to save your ingredient selection
+    {% endif %}
 
-        ul{
-            -moz-column-count: 3;
-            -moz-column-gap: 20px;
-            -webkit-column-count: 3;
-            -webkit-column-gap: 20px;
-            column-count: 3;
-            column-gap: 20px;
-            list-style-type:none;
-        }
-
-        li{
-            margin-bottom: 10px;
-        }
-
-    </style>
-
-
-    <div class="container">
-        <h2>Select your ingredients</h2>
-        {% if not session.logged_in %}
-            Log in <a href="{{ url_for('login') }}">here</a> to save your ingredient selection
-        {% endif %}
-
-        <div class="card">
-            <form method="POST" action="">
-                <ul class="ingred">
-                    {% for ingredient in ingredients %}
-                        <li>
-                            {% if ingredient in pantry %}
-                                <input type="checkbox" value="{{ingredient}}" name="ingredient" checked=checked>
-                            {% else %}
-                                <input type="checkbox" value="{{ingredient}}" name="ingredient">
-                            {% endif %}
-                            <label for={{ingredient}}>{{ingredient}}</label><br>
-                        </li>
-                    {% endfor %}
-                </ul>
-                <hr>
-                <input type="submit" value="Submit" class="btn btn-primary" style="margin-bottom: 50px;"> 
-            </form>
-        </div>
+    <div class="card">
+        <form method="POST" action="">
+            <ul class="ingred">
+                {% for ingredient in ingredients %}
+                    <li class="ingred">
+                        {% if ingredient in pantry %}
+                            <input class="circle" type="checkbox" value="{{ingredient}}" name="ingredient" checked=checked>
+                        {% else %}
+                            <input class="circle" type="checkbox" value="{{ingredient}}" name="ingredient">
+                        {% endif %}
+                        <label for={{ingredient}}>{{ingredient}}</label><br>
+                    </li>
+                {% endfor %}
+            </ul>
+            <hr>
+            <input type="submit" value="Submit" class="btn btn-outline-primary" style="margin-bottom: 50px;"> 
+        </form>
     </div>
 {% endblock %}

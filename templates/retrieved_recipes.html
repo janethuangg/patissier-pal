@@ -1,36 +1,6 @@
 {%extends 'layout.html' %}
 
 {% block body %}
-<style>
-    ul {
-    display: -ms-flexbox;           /* IE 10 */
-    display: -webkit-flex;          /* Safari 6.1+. iOS 7.1+ */
-    display: flex;
-    -webkit-flex-flow: wrap column; /* Safari 6.1+ */
-    flex-flow: wrap column;
-    max-height: 150px;      
-    }
-    
-    input[type='checkbox'] {
-            -webkit-appearance:none;
-            width:20px;
-            height:20px;
-            margin-right:10px;
-            background:white;
-            border-radius:5px;
-            border:2px solid #555;
-            vertical-align: middle;
-            outline: none;   
-            float:right;
-        }
-    input[type='checkbox']:checked {
-        background:#d1a923;
-        border:2px solid #d1a923;
-    }
-    
-</style>
-
-<div class="container">
     {% if not recipes %}
         <h2>No recipes found matching the given conditions :(</h2>
     {% else %}
@@ -41,30 +11,26 @@
             <div class="row">
                 <div class="col-4">
                     <img src="https://img.youtube.com/vi/{{recipe.id}}/sddefault.jpg" width=333 height=233}></img>
-                    <!-- <iframe width="333" height="200" src="https://www.youtube.com/embed/{{recipe.id}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> -->
                 </div>
-                
-                
+            
                 <div class="col-8">
-                    <h4><a href="https://www.youtube.com/watch?v={{recipe.id}}" target="_blank">{{recipe.title}}</a></h4><input type="checkbox" value="{{recipe.id}}" name="final_recipe">
-                <ul>
-                    {% for ingredient in recipe.ingredientDetails %}
-                        <li>{{ingredient}} -                         
-                            {% for unit in recipe.ingredientDetails[ingredient] %}
-                                {{recipe.ingredientDetails[ingredient][unit]}}{{unit}}
-                                {% if not loop.last %}
-                                +
-                                {% endif %}
-                            {% endfor %}
-                        </li>    
-                    {% endfor %}
-                <ul>
+                    <h4><a href="https://www.youtube.com/watch?v={{recipe.id}}" target="_blank">{{recipe.title}}</a></h4><input class="square" type="checkbox" value="{{recipe.id}}" name="final_recipe">
+                    <ul class="recipe">
+                        {% for ingredient in recipe.ingredientDetails %}
+                            <li>{{ingredient}} -                         
+                                {% for unit in recipe.ingredientDetails[ingredient] %}
+                                    {{recipe.ingredientDetails[ingredient][unit]}}{{unit}}
+                                    {% if not loop.last %}
+                                    +
+                                    {% endif %}
+                                {% endfor %}
+                            </li>    
+                        {% endfor %}
+                    <ul>
                 </div>
-
             </div>
         {% endfor %}
-        <input type="submit" value="Submit" class="btn btn-primary" style="margin-bottom: 50px;"> 
+        <input type="submit" value="Submit" class="btn btn-outline-primary" style="margin-bottom: 50px;"> 
         </form>
     {% endif %}
-</div>
 {% endblock %}

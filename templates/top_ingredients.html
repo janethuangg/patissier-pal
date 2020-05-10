@@ -1,37 +1,19 @@
 {%extends 'layout.html' %}
 
-{% block body %}    
-<style>
-    ul{
-        -moz-column-count: 3;
-        -moz-column-gap: 20px;
-        -webkit-column-count: 3;
-        -webkit-column-gap: 20px;
-        column-count: 3;
-        column-gap: 20px;
-        list-style-type:none;
-    }
-
-    li{
-        margin-bottom: 10px;
-    }
-
-    </style>    
-    <div class="container">
-        <h2>Top 10 Most Used Ingredients</h2>
-        <div class="row">
-            <div class="col">
-                <ol class="list-group">
-                    {% for ingredient in ingredients %}
-                        <li class="list-group-item">
-                            <span class="badge badge-light badge-pill" style="margin-right: 10px;">{{loop.index}}</span>
-                            <b>{{ingredient.name}}</b> is used in {{ingredient.count}}% of the recipes
-                        </li>
-                    {% endfor %}
-                    </ol>
-            </div>
+{% block body %}      
+    <h2>Top 10 Most Used Ingredients</h2>
+    <div class="row">
+        <div class="col">
+            <ol class="list-group">
+                {% for ingredient in ingredients %}
+                    <li class="list-group-item">
+                        <span class="badge badge-light badge-pill" style="margin-right: 10px;">{{loop.index}}</span>
+                        <b>{{ingredient.name}}</b> is used in {{ingredient.count}}% of the recipes
+                    </li>
+                {% endfor %}
+                </ol>
         </div>
-        <br>
-        <br>
     </div>
+    <br>
+    <br>
 {% endblock %}

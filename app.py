@@ -8,26 +8,15 @@ import copy
 import math
 from passlib.hash import sha256_crypt
 
-# MongoDB Config
+# mongodb config
 client = MongoClient(os.environ.get('MONGO_URI'))
 db = client.desserts
  
- # App Setup
+ # app setup
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')
-
-# Decorator function to restrict access to certain pages
-def login_required(f):
-    @wraps(f)
-    def wrap(*args, **kwargs):
-        if 'logged_in' in session:
-            return f(*args, **kwargs)
-        else:
-            flash('Unauthorized - Please log in', 'danger')
-            return redirect(url_for('login'))
-    return wrap
     
-# Registration form class
+# registration form 
 class RegisterForm(Form):
     name = StringField('Name', [validators.Length(min=1, max=50)])
     username = StringField('Username', [validators.Length(min=4, max=25)])
@@ -40,15 +29,20 @@ class RegisterForm(Form):
 
 @app.route('/register',methods=['GET','POST'])
 def register():
+    # create form object
     form = RegisterForm(request.form)
+
     if request.method == 'POST' and form.validate():
+        # get data from form
         name = form.name.data
         email = form.email.data
         username = form.username.data
         password = sha256_crypt.encrypt(str(form.password.data))
         
+        # create new mongodb record
         user = {'name':name,'email':email,'username':username,'password':password,'pantry':[]}
         db.users.insert(user)
+
         flash("You are now registered and can log in", "success")
         return redirect(url_for('login'))
 
@@ -57,20 +51,24 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == "POST":
-        #get form fields
+        # get data from form
         username = request.form['username']
         password_candidate = request.form['password']
 
+        # try to find user in mongodb
         data = list(db.users.find({"username":username}))
-        print(data)
+
+        # if username is found, verify password
         if data:
             data = data[0]
             password = data['password']
 
             if sha256_crypt.verify(password_candidate, password):
+                # start a new session
                 session['logged_in'] = True
                 session['username'] = username
                 session['name'] = data['name']
+
                 flash('You are now logged in', 'success')
                 return redirect(url_for('index'))
             else:
@@ -96,11 +94,16 @@ def index():
 @app.route('/enter_recipe', methods=['GET','POST'])
 def enter_recipe():
     if request.method == 'POST':
+        # get selected video
         selected_video = request.form.get('video')
 
+        # try to find the video in mongodb
         try:        
             mongo_response1 = db.videos.find({"title":selected_video})
+
+            # get ingredient names from that video record
             selected_ingredients = mongo_response1[0]['ingredientNames']
+
             return redirect(url_for('retrieved_recipes', ingredients=selected_ingredients))
         except:
             flash('Invalid video','danger')
@@ -112,19 +115,22 @@ def enter_recipe():
 @app.route('/enter_ingredients', methods=['GET','POST'])
 def enter_ingredients():
     if request.method == 'POST':
+        # get all selected ingredients
         selected_ingredients = request.form.getlist('ingredient')
         
+        # update user ingredient selection if logged in
         try:
             if session['logged_in']:
                 db.users.update_one({ "username" : "janethuangg" },{ "$set": {"pantry":selected_ingredients }})
         except: 
             pass
 
-        # flash('Recipes Found','success')
         return redirect(url_for('retrieved_recipes', ingredients=selected_ingredients))
 
     ingredients = db.ingredients.distinct('name')
     pantry = []
+    
+    # if user is logged in, get previously selected ingredients to pre-check the checkboxes
     try:
         if session['logged_in']:
             pantry = db.users.find_one({"username":"janethuangg"},{"_id":0,"pantry":1})['pantry']
@@ -135,9 +141,11 @@ def enter_ingredients():
 
 @app.route('/top_ingredients')
 def top_ingredients():
+    # get the top 10 ingredients by count
     mongo_response = db.ingredients.find({},{'_id':0,'name':1, 'count':1}).sort([("count", -1), ("name", 1)]).limit(10)
     num_videos = db.videos.count_documents({})
 
+    # calculate in what % of videos the ingredient was used
     ordered_ingredients = []
     for x in mongo_response:
         x['count'] = round((x['count']/num_videos)*100,1)
@@ -145,9 +153,11 @@ def top_ingredients():
 
     return render_template('top_ingredients.html', ingredients=ordered_ingredients)  
 
+# helper function for pagination purposes
 def get_recipes(offset=0, per_page=10, recipes=[]):
     return recipes[offset: offset + per_page]
 
+# helper function to avoid video title overflow
 def formatName(recipe):
     if len(recipe['title'])>55:
         recipe['title'] = recipe['title'][:55]+"..." 
@@ -155,15 +165,17 @@ def formatName(recipe):
 
 @app.route('/video_library')
 def video_library():
-    page, per_page, offset = get_page_args(page_parameter='page',
-                                           per_page_parameter='per_page')
+    # set up pagination
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+
+    # get all recipes sorted by title & format extensively long titles
     recipes = list(db.videos.find({},{ "id": 1, "ingredientDetails":1,"_id":0,"title":1}).sort([("title",1)]))
     recipes = list(map(formatName,recipes))
     total = len(recipes)
 
+    # more pagination setup
     pagination_recipes = get_recipes(offset=offset, per_page=per_page, recipes=recipes)
-    pagination = Pagination(page=page, per_page=per_page, total=total,
-                            css_framework='bootstrap4')
+    pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
 
     return render_template('library.html', 
                             recipes=pagination_recipes,
@@ -174,21 +186,31 @@ def video_library():
 @app.route('/retrieved_recipes', methods=['GET','POST'])
 def retrieved_recipes():
     if request.method == 'POST':
+        # get all selected recipes
         final_recipes = request.form.getlist('final_recipe')
+
+        # feed them into summary page
         return redirect(url_for('final_recipes', recipe_ids=final_recipes))
 
+    # get ingredient list from url params
     selected_ingredients = request.args.getlist('ingredients')
+
+    # get all recipes from mongodb that can be made with the given ingredients
     recipes = list(db.videos.find({"ingredientNames": {"$not": {"$elemMatch": {"$nin" : selected_ingredients }}}},{ "id": 1, "ingredientDetails":1,"_id":0,"title":1}).sort([("title", 1)]))
     recipes = list(map(formatName,recipes))
-    print(recipes[:5])
+
     return render_template('retrieved_recipes.html',recipes=recipes)
 
 @app.route('/final_recipes')
 def final_recipes():
+    # get ids of chosen videos from url
     ids = request.args.getlist('recipe_ids')
+
+    # get those videos from mongodb & format their names
     final_recipes = list(db.videos.find({"id":{"$in":ids}}))
     final_recipes = list(map(formatName,final_recipes))
         
+    # calculate the compiled ingredient amounts
     compiled = {}
     for recipe in final_recipes:
         ingredientDetails = recipe['ingredientDetails']

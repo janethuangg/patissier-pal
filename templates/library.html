@@ -1,20 +1,18 @@
 {%extends 'layout.html' %}
 
 {% block body %}
-<div class="container">
-
     <h2>Check out the video library below!</h2>
     {{ pagination.info }}
-        {% for recipe in recipes %}
-        <div class="row">
-            <div class="col-4">
-                <!-- <img src="https://img.youtube.com/vi/{{recipe.id}}/sddefault.jpg" width=333 height=233}></img> -->
-                <iframe width="333" height="200" src="https://www.youtube.com/embed/{{recipe.id}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-            
-            <div class="col-8">
-                <h4>{{recipe.title}}</h4>
-            <ul class="ingred">
+
+    {% for recipe in recipes %}
+    <div class="row">
+        <div class="col-4">
+            <iframe width="333" height="200" src="https://www.youtube.com/embed/{{recipe.id}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        
+        <div class="col-8">
+            <h4>{{recipe.title}}</h4>
+            <ul class="recipe">
                 {% for ingredient in recipe.ingredientDetails %}
                     <li>{{ingredient}} -                         
                         {% for unit in recipe.ingredientDetails[ingredient] %}
@@ -26,12 +24,10 @@
                     </li>    
                 {% endfor %}
             <ul>
-            </div>
-
         </div>
+    </div>
     {% endfor %}
+    
     {{ pagination.links }}
     <br/>
-
-</div>
 {% endblock %}
