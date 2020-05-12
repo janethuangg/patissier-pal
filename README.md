@@ -18,7 +18,7 @@ This project serves as a resource for bakers who prefer following YouTube videos
 - *app.py* -- core module containing all routes & controllers
 - *templates* folder -- contains all jinja templates
 - *static* folder -- contains stylesheets & gifs
-- *data* folder -- contains database population notebook + local files and authentication info used in the script
+- *data* folder -- contains database population notebook + local ingredient csv and authentication info used in the script
 - *conf.py* & *Procfile* -- configuration files for Heroku deployment
 
 ## Database Population

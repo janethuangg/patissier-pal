@@ -2,8 +2,8 @@
 
 {% block body %}
     {% if not recipes %}
-        <h2>No recipes found matching the given conditions :(</h2>
-        <>Please <u><a href={{ url_for('enter_ingredients') }}>select more ingredients</a></u> or skim through the <u><a href={{ url_for('video_library') }}>video library</a></u> as a starting point</p>
+        <h2>No recipes found matching the given conditions</h2>
+        <p>Please <u><a href={{ url_for('enter_ingredients') }}>select more ingredients</a></u> or skim through the <u><a href={{ url_for('video_library') }}>video library</a></u> as a starting point</p>
         <div class="outer" style="margin-top:10vh">
             <div class="inner">
                 <img class="mw-100" src="static/graphics/giphy.gif" alt="Max-width 100%">
